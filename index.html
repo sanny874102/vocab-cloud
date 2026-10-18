@@ -15,23 +15,43 @@
 
   <div class="w-full max-w-md bg-white min-h-screen flex flex-col shadow-xl relative pb-16">
     
-    <!-- 頂部導覽列 (所有畫面共用) -->
+    <!-- 頂部導覽列 (點擊學號或登出皆可變更學號) -->
     <header class="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-white sticky top-0 z-30">
       <div onclick="switchTab('dashboard')" class="cursor-pointer bg-[#4f46e5] text-white font-black text-sm px-3.5 py-1.5 rounded-xl tracking-wider shadow-sm">
         VOCAB CLOUD
       </div>
       <div class="flex items-center space-x-2">
-        <div class="bg-slate-100 text-slate-700 text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 font-bold">
-          <i class="fa-solid fa-circle-user text-slate-400"></i>
-          <span>學號：11500000</span>
-        </div>
-        <button onclick="alert('已登出系統')" class="text-rose-500 border border-rose-200 bg-rose-50/50 text-xs px-2.5 py-1 rounded-lg font-bold hover:bg-rose-100">
+        <!-- 點擊學號可直接修改 -->
+        <button onclick="openLoginModal()" title="點擊變更學號" class="bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 font-bold transition">
+          <i class="fa-solid fa-circle-user text-indigo-500"></i>
+          <span>學號：<span id="display-student-id">11500000</span></span>
+          <i class="fa-solid fa-pen text-[10px] text-slate-400 ml-0.5"></i>
+        </button>
+        <button onclick="openLoginModal()" class="text-rose-500 border border-rose-200 bg-rose-50/50 text-xs px-2.5 py-1 rounded-lg font-bold hover:bg-rose-100">
           登出
         </button>
       </div>
     </header>
 
-    <!-- 畫面 1：出題類別與時間預估首頁 (圖3) -->
+    <!-- 學號登入 / 變更學號彈窗 -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 text-center">
+        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-xl">
+          <i class="fa-solid fa-user-graduate"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-black text-slate-800">學生學號設定</h2>
+          <p class="text-xs text-slate-400 mt-1">請輸入您的學號以載入個人學習紀錄</p>
+        </div>
+        <input id="student-id-input" type="text" placeholder="例如：11500001" class="w-full border-2 border-slate-200 rounded-xl px-4 py-2.5 text-center font-bold text-slate-800 focus:outline-none focus:border-indigo-600">
+        <div class="flex gap-2">
+          <button onclick="closeLoginModal()" class="flex-1 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs hover:bg-slate-200">取消</button>
+          <button onclick="saveStudentId()" class="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs hover:bg-indigo-700 shadow-md">確認登入</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 畫面 1：出題類別與時間預估首頁 -->
     <section id="view-dashboard" class="p-4 space-y-4">
       <div class="purple-gradient text-white rounded-3xl p-4 shadow-lg">
         <div class="grid grid-cols-4 gap-2 text-center items-end">
@@ -98,7 +118,7 @@
       </div>
     </section>
 
-    <!-- 畫面 2：單字卡背誦與結構拆解 (圖4、圖10) -->
+    <!-- 畫面 2：單字卡背誦與結構拆解 -->
     <section id="view-flashcard" class="p-4 hidden flex-col flex-1 justify-between">
       <div class="border-2 border-indigo-200 rounded-3xl p-5 flex flex-col items-center bg-white shadow-sm">
         <div class="w-full flex items-center justify-between mb-2">
@@ -118,18 +138,14 @@
         <!-- 結構拆解 -->
         <div class="w-full bg-amber-50/70 border border-amber-200 rounded-2xl p-3 mb-3 text-center">
           <div class="text-xs font-bold text-amber-800 mb-2">🧩 單字結構拆解與記憶法</div>
-          <div id="card-roots" class="flex items-center justify-center gap-1.5 font-black text-amber-950 text-lg mb-1">
-            <span class="bg-white border border-amber-300 px-2.5 py-0.5 rounded-lg">acci</span> +
-            <span class="bg-white border border-amber-300 px-2.5 py-0.5 rounded-lg">dent</span> +
-            <span class="bg-white border border-amber-300 px-2.5 py-0.5 rounded-lg">ally</span>
-          </div>
-          <p id="card-root-desc" class="text-[11px] text-amber-800 font-medium">accident 意外 (ac-到 + cid 落下) + -ally 副詞字尾</p>
+          <div id="card-roots" class="flex items-center justify-center gap-1.5 font-black text-amber-950 text-lg mb-1"></div>
+          <p id="card-root-desc" class="text-[11px] text-amber-800 font-medium"></p>
         </div>
 
         <!-- 常見搭配詞 -->
         <div class="w-full bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3 mb-3 text-left">
           <div class="text-xs font-bold text-emerald-800 mb-1">🔗 常見搭配詞</div>
-          <div id="card-collocations" class="text-xs space-y-1 text-emerald-950 font-bold">
+          <div class="text-xs space-y-1 text-emerald-950 font-bold">
             <div>accidentally drop <span class="font-normal text-emerald-700">不小心掉落</span></div>
             <div>accidentally delete <span class="font-normal text-emerald-700">不小心刪除</span></div>
             <div>accidentally hit <span class="font-normal text-emerald-700">不小心撞到</span></div>
@@ -142,10 +158,8 @@
             <span>精選課文例句</span>
             <button onclick="speakSentence()" class="text-slate-500 hover:text-indigo-600"><i class="fa-solid fa-volume-high"></i></button>
           </div>
-          <p id="card-ex-en" class="text-xs text-slate-800 font-serif leading-relaxed">
-            Our teacher <span class="text-rose-600 font-bold underline">accidentally</span> turned on a funny filter on her camera during the online class.
-          </p>
-          <p id="card-ex-zh" class="text-[11px] text-slate-500 mt-1">我們的老師在線上課程時不小心在她的鏡頭上開啟了一個搞笑濾鏡。</p>
+          <p id="card-ex-en" class="text-xs text-slate-800 font-serif leading-relaxed"></p>
+          <p id="card-ex-zh" class="text-[11px] text-slate-500 mt-1"></p>
         </div>
       </div>
 
@@ -160,7 +174,7 @@
       </div>
     </section>
 
-    <!-- 畫面 3：單字四選一測驗 (圖7) -->
+    <!-- 畫面 3：單字四選一測驗 -->
     <section id="view-quiz-mc" class="p-4 hidden space-y-4">
       <div class="flex justify-between items-center text-xs">
         <button onclick="switchTab('dashboard')" class="text-slate-500 font-bold">← 離開測驗</button>
@@ -169,27 +183,27 @@
       <div class="border border-slate-200 rounded-3xl p-5 bg-white shadow-sm space-y-4">
         <div class="flex justify-between text-xs text-slate-400 font-bold">
           <span>第 1 / 34 題 (第 2 套)</span>
-          <span class="text-rose-500">■ 終止測驗</span>
+          <span onclick="switchTab('dashboard')" class="text-rose-500 cursor-pointer">■ 終止測驗</span>
         </div>
         <span class="inline-block bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-0.5 rounded">v.</span>
         <p class="text-base font-serif font-bold leading-relaxed text-slate-800">
           Can you <span class="inline-block bg-amber-100 border border-amber-300 px-4 py-0.5 rounded text-amber-900 font-mono">______</span> where we parked our scooter before entering the shopping mall?
         </p>
         <p class="text-xs text-slate-500 font-bold">請選擇最適當的單字或片語：</p>
-        <div class="space-y-2.5" id="mc-options">
-          <button onclick="selectMC(this, false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
+        <div class="space-y-2.5">
+          <button onclick="selectMC(false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
             <span><span class="inline-block w-6 h-6 rounded bg-slate-100 text-slate-600 text-xs leading-6 mr-2">A</span> realize</span>
             <span class="text-[11px] text-slate-400">按 1</span>
           </button>
-          <button onclick="selectMC(this, true)" class="w-full p-3 border-2 border-blue-500 bg-blue-50/30 rounded-2xl flex items-center justify-between text-sm font-bold">
+          <button onclick="selectMC(true)" class="w-full p-3 border-2 border-blue-500 bg-blue-50/30 rounded-2xl flex items-center justify-between text-sm font-bold">
             <span><span class="inline-block w-6 h-6 rounded bg-blue-600 text-white text-xs leading-6 mr-2">B</span> recall</span>
             <span class="text-[11px] text-slate-400">按 2</span>
           </button>
-          <button onclick="selectMC(this, false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
+          <button onclick="selectMC(false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
             <span><span class="inline-block w-6 h-6 rounded bg-slate-100 text-slate-600 text-xs leading-6 mr-2">C</span> yell</span>
             <span class="text-[11px] text-slate-400">按 3</span>
           </button>
-          <button onclick="selectMC(this, false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
+          <button onclick="selectMC(false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
             <span><span class="inline-block w-6 h-6 rounded bg-slate-100 text-slate-600 text-xs leading-6 mr-2">D</span> depress</span>
             <span class="text-[11px] text-slate-400">按 4</span>
           </button>
@@ -198,7 +212,7 @@
       </div>
     </section>
 
-    <!-- 畫面 4：拼寫題測驗 (圖9) -->
+    <!-- 畫面 4：拼寫題測驗 -->
     <section id="view-quiz-spell" class="p-4 hidden space-y-4">
       <div class="flex justify-between items-center text-xs">
         <button onclick="switchTab('dashboard')" class="text-slate-500 font-bold">← 離開測驗</button>
@@ -214,13 +228,13 @@
         </p>
         <input id="spell-input" type="text" value="depression" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm font-bold focus:outline-none focus:border-indigo-600" placeholder="請依提示拼寫單字...">
         <button onclick="checkSpell()" class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-xs">檢查答案 / 繼續下一題 →</button>
-        <div id="spell-feedback" class="bg-rose-50/70 border border-rose-100 p-3 rounded-xl text-xs">
+        <div class="bg-rose-50/70 border border-rose-100 p-3 rounded-xl text-xs">
           正確答案：<span class="text-rose-600 font-black underline">depression</span> <span class="text-slate-400 font-mono">/dɪˈprɛʃən/</span>
         </div>
       </div>
     </section>
 
-    <!-- 畫面 5：課文克漏字訂正 (圖2) -->
+    <!-- 畫面 5：課文克漏字訂正 -->
     <section id="view-cloze" class="p-4 hidden space-y-4">
       <span class="inline-block bg-indigo-50 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full border border-indigo-200">訂正 - 第 3 / 7 題 (Part 1)</span>
       <div class="bg-emerald-50/40 border border-emerald-200 rounded-3xl p-4 space-y-3">
@@ -236,7 +250,7 @@
       </div>
     </section>
 
-    <!-- 畫面 6：錯題複習庫 (圖1) -->
+    <!-- 畫面 6：錯題複習庫 -->
     <section id="view-mistakes" class="p-4 hidden space-y-3">
       <div class="flex justify-between items-center">
         <button onclick="switchTab('dashboard')" class="text-xs font-bold text-slate-500">← 返回主畫面</button>
@@ -247,7 +261,7 @@
       <div id="mistake-list" class="space-y-2.5"></div>
     </section>
 
-    <!-- 彈窗：單字結構記憶兩步驟 (圖5、圖6、圖8) -->
+    <!-- 彈窗：單字結構記憶兩步驟 -->
     <div id="step-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 shadow-2xl space-y-3">
         <div class="flex justify-between items-center border-b pb-2">
@@ -256,27 +270,25 @@
         </div>
         <p class="font-bold text-sm">adv. 意外地；不小心地</p>
         <div class="flex gap-2">
-          <button onclick="setModalStep(1)" id="btn-step1" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-amber-500 text-white">① 補齊字母</button>
-          <button onclick="setModalStep(2)" id="btn-step2" class="flex-1 py-1.5 text-xs font-bold rounded-lg border border-slate-200 text-slate-500">② 搭配詞</button>
+          <button onclick="setModalStep(1)" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-amber-500 text-white">① 補齊字母</button>
+          <button onclick="setModalStep(2)" class="flex-1 py-1.5 text-xs font-bold rounded-lg border border-slate-200 text-slate-500">② 搭配詞</button>
         </div>
 
-        <!-- 步驟 1：字根填空 (圖8) -->
         <div id="modal-step1-content" class="space-y-3 pt-2 text-center">
           <p class="text-[11px] text-slate-500">已給出一半的字母組合，請在空格內填入缺少的部分。</p>
           <div class="flex items-center justify-center gap-1.5 font-black text-base">
             <span class="bg-amber-50 border border-amber-300 px-3 py-1.5 rounded-xl text-amber-900">acci</span> +
-            <input id="root-input" type="text" placeholder="dent" class="w-20 border-2 border-amber-400 rounded-xl px-2 py-1.5 text-center text-slate-800 focus:outline-none"> +
+            <input type="text" placeholder="dent" class="w-20 border-2 border-amber-400 rounded-xl px-2 py-1.5 text-center text-slate-800 focus:outline-none"> +
             <span class="bg-amber-50 border border-amber-300 px-3 py-1.5 rounded-xl text-amber-900">ally</span>
           </div>
-          <button onclick="setModalStep(2)" class="w-full py-2.5 bg-amber-500 text-white rounded-xl font-bold text-xs">檢查並前往下一步 (Enter) →</button>
+          <button onclick="setModalStep(2)" class="w-full py-2.5 bg-amber-500 text-white rounded-xl font-bold text-xs">檢查並前往下一步 →</button>
         </div>
 
-        <!-- 步驟 2：搭配詞填空 (圖5、圖6) -->
         <div id="modal-step2-content" class="hidden space-y-3 pt-2 text-center">
           <p class="text-[11px] text-slate-500">看提示字母，輸入搭配詞中缺少的完整單字。</p>
           <div class="text-xs font-mono text-amber-700 font-bold">a _ _ _ _ _ _ _ _ _ _ y</div>
           <div class="flex items-center justify-center gap-2">
-            <input id="colloc-input" type="text" value="accidentally" class="border-2 border-emerald-500 rounded-xl px-3 py-1.5 text-center font-bold text-sm">
+            <input type="text" value="accidentally" class="border-2 border-emerald-500 rounded-xl px-3 py-1.5 text-center font-bold text-sm">
             <span class="font-black text-base">hit</span>
           </div>
           <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-left text-xs text-emerald-900 font-bold">
@@ -287,7 +299,7 @@
       </div>
     </div>
 
-    <!-- 底部快速切換功能列 (方便預覽所有截圖介面) -->
+    <!-- 底部快速切換功能列 -->
     <nav class="fixed bottom-0 w-full max-w-md bg-white border-t border-slate-200 grid grid-cols-5 py-2 text-[10px] font-bold text-slate-500 z-40">
       <button onclick="switchTab('dashboard')" class="flex flex-col items-center gap-1 hover:text-indigo-600"><i class="fa-solid fa-sliders text-sm"></i>測驗設定</button>
       <button onclick="switchTab('flashcard')" class="flex flex-col items-center gap-1 hover:text-indigo-600"><i class="fa-solid fa-clone text-sm"></i>單字卡</button>
@@ -298,8 +310,8 @@
   </div>
 
   <script>
-    // 若已部署 GAS Web App，可將網址貼在下方引號中同步雲端試算表
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzU3IojW-hMC2tjHNLf9bpZc0d7tKsiby6F5zVDJ8-Vr8lEgpvz9q8KavOu20XXqz7rYg/exec";
+    const GAS_URL = "";
+    let currentStudentId = localStorage.getItem("vocab_student_id") || "11500000";
 
     const defaultVocab = [
       { word: "accidentally", pos: "adv.", translation: "意外地；不小心地", phonetic: "/ˌæksɪˈdɛntli/", root_break: "acci + dent + ally", root_desc: "accident 意外 (ac-到 + cid 落下) + -ally 副詞字尾", example_en: "Our teacher accidentally turned on a funny filter on her camera during the online class.", example_zh: "我們的老師在線上課程時不小心在她的鏡頭上開啟了一個搞笑濾鏡。" },
@@ -317,6 +329,35 @@
     ];
 
     let currentIdx = 0;
+
+    // 學號登入與變更功能
+    function initStudentId() {
+      document.getElementById("display-student-id").innerText = currentStudentId;
+    }
+
+    function openLoginModal() {
+      document.getElementById("student-id-input").value = currentStudentId;
+      document.getElementById("login-modal").classList.remove("hidden");
+      document.getElementById("login-modal").classList.add("flex");
+      setTimeout(() => document.getElementById("student-id-input").focus(), 100);
+    }
+
+    function closeLoginModal() {
+      document.getElementById("login-modal").classList.add("hidden");
+      document.getElementById("login-modal").classList.remove("flex");
+    }
+
+    function saveStudentId() {
+      const val = document.getElementById("student-id-input").value.trim();
+      if (!val) {
+        alert("請輸入有效的學號！");
+        return;
+      }
+      currentStudentId = val;
+      localStorage.setItem("vocab_student_id", currentStudentId);
+      document.getElementById("display-student-id").innerText = currentStudentId;
+      closeLoginModal();
+    }
 
     function switchTab(tab) {
       ["dashboard", "flashcard", "quiz-mc", "quiz-spell", "cloze", "mistakes"].forEach(id => {
@@ -375,7 +416,7 @@
       document.getElementById("modal-step2-content").classList.toggle("hidden", step !== 2);
     }
 
-    function selectMC(btn, isCorrect) {
+    function selectMC(isCorrect) {
       const fb = document.getElementById("mc-feedback");
       fb.innerText = isCorrect ? "✓ 答對了！ recall (v. 回想；記起)" : "✗ 答錯囉，請再試一次！";
       fb.className = isCorrect ? "bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-2 rounded-lg" : "bg-rose-50 text-rose-600 text-xs font-bold px-3 py-2 rounded-lg";
@@ -406,6 +447,7 @@
       `).join("");
     }
 
+    initStudentId();
     renderCard();
     renderMistakes();
   </script>
