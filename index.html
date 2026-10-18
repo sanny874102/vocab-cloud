@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOCAB CLOUD - 線上英文單字學習平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #f3f4f8; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif; }
+    .purple-gradient { background: linear-gradient(135deg, #5b21b6 0%, #4f46e5 100%); }
+  </style>
+</head>
+<body class="flex justify-center min-h-screen text-slate-800">
+
+  <div class="w-full max-w-md bg-white min-h-screen flex flex-col shadow-xl relative pb-16">
+    
+    <!-- 頂部導覽列 (所有畫面共用) -->
+    <header class="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-white sticky top-0 z-30">
+      <div onclick="switchTab('dashboard')" class="cursor-pointer bg-[#4f46e5] text-white font-black text-sm px-3.5 py-1.5 rounded-xl tracking-wider shadow-sm">
+        VOCAB CLOUD
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="bg-slate-100 text-slate-700 text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 font-bold">
+          <i class="fa-solid fa-circle-user text-slate-400"></i>
+          <span>學號：11500000</span>
+        </div>
+        <button onclick="alert('已登出系統')" class="text-rose-500 border border-rose-200 bg-rose-50/50 text-xs px-2.5 py-1 rounded-lg font-bold hover:bg-rose-100">
+          登出
+        </button>
+      </div>
+    </header>
+
+    <!-- 畫面 1：出題類別與時間預估首頁 (圖3) -->
+    <section id="view-dashboard" class="p-4 space-y-4">
+      <div class="purple-gradient text-white rounded-3xl p-4 shadow-lg">
+        <div class="grid grid-cols-4 gap-2 text-center items-end">
+          <div class="col-span-2 text-left">
+            <div class="text-[11px] opacity-80 font-medium">預估總考試時間</div>
+            <div class="text-2xl font-black tracking-tight">34 分 35 秒</div>
+          </div>
+          <div>
+            <div class="text-[11px] opacity-80">總題數</div>
+            <div class="text-lg font-black">128</div>
+          </div>
+          <div>
+            <div class="text-[11px] opacity-80">滿分 / 每題</div>
+            <div class="text-sm font-black">100 / 0.8</div>
+          </div>
+        </div>
+        <div class="mt-3 pt-2.5 border-t border-white/20 text-[10px] opacity-90 leading-relaxed">
+          龍騰版 拼寫題 31 題×15 秒 ｜ 龍騰版 單字四選一 31 題×20 秒 ｜ 龍騰版 Word Bank 單字配對 33 題×15 秒
+        </div>
+      </div>
+
+      <div class="bg-slate-900 text-white rounded-2xl p-3.5 flex items-center justify-between">
+        <div>
+          <div class="text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-book-open"></i> 挑選 龍騰高中英文 的出題類別
+          </div>
+          <div class="text-[11px] text-slate-400 mt-0.5">共 97 個字彙、3 個單元</div>
+        </div>
+        <select class="bg-slate-800 border border-slate-700 text-xs rounded-lg px-2.5 py-1.5 font-bold">
+          <option>第一冊 (高一上)</option>
+          <option>第二冊 (高一下)</option>
+        </select>
+      </div>
+
+      <!-- 拼寫題設定卡 -->
+      <div class="border border-slate-200 rounded-2xl p-4 space-y-3 bg-white shadow-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" checked class="w-4 h-4 accent-blue-600 rounded">
+            <span class="font-bold text-sm"><i class="fa-regular fa-keyboard text-indigo-600 mr-1"></i>拼寫題</span>
+            <span class="bg-indigo-50 text-indigo-700 text-[11px] font-bold px-2 py-0.5 rounded">每題 15 秒</span>
+          </div>
+          <button onclick="switchTab('quiz-spell')" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold">立即測驗 →</button>
+        </div>
+        <div class="flex items-center gap-2 text-xs">
+          <span class="px-2.5 py-1 rounded-lg border border-blue-600 bg-blue-50 text-blue-700 font-bold">✓ L1 (31)</span>
+          <span class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600">L2 (35)</span>
+          <span class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-600">L3 (31)</span>
+        </div>
+        <div class="text-xs font-bold text-slate-700">預估 7 分 45 秒 (每題 15 秒)</div>
+      </div>
+
+      <!-- 單字四選一設定卡 -->
+      <div class="border border-slate-200 rounded-2xl p-4 space-y-3 bg-white shadow-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" checked class="w-4 h-4 accent-blue-600 rounded">
+            <span class="font-bold text-sm"><i class="fa-solid fa-list-check text-indigo-600 mr-1"></i>單字四選一</span>
+            <span class="bg-indigo-50 text-indigo-700 text-[11px] font-bold px-2 py-0.5 rounded">每題 20 秒</span>
+          </div>
+          <button onclick="switchTab('quiz-mc')" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold">立即測驗 →</button>
+        </div>
+        <div class="text-xs font-bold text-slate-700">預估 10 分 20 秒 (每題 20 秒)</div>
+      </div>
+    </section>
+
+    <!-- 畫面 2：單字卡背誦與結構拆解 (圖4、圖10) -->
+    <section id="view-flashcard" class="p-4 hidden flex-col flex-1 justify-between">
+      <div class="border-2 border-indigo-200 rounded-3xl p-5 flex flex-col items-center bg-white shadow-sm">
+        <div class="w-full flex items-center justify-between mb-2">
+          <span id="card-index" class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-md">1 / 4</span>
+          <div class="flex items-center gap-2">
+            <span id="card-pos" class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded">adv.</span>
+            <button onclick="speakWord()" class="text-indigo-600 hover:text-indigo-800 text-xs font-bold flex items-center gap-1">
+              <i class="fa-solid fa-volume-high"></i> 發音
+            </button>
+          </div>
+        </div>
+
+        <h1 id="card-word" class="text-3xl font-black text-slate-900 mt-1">accidentally</h1>
+        <p id="card-zh" class="text-lg font-bold text-indigo-950 mt-1">意外地；不小心地</p>
+        <p id="card-phonetic" class="text-xs text-slate-400 font-mono mb-3">/ˌæksɪˈdɛntli/</p>
+
+        <!-- 結構拆解 -->
+        <div class="w-full bg-amber-50/70 border border-amber-200 rounded-2xl p-3 mb-3 text-center">
+          <div class="text-xs font-bold text-amber-800 mb-2">🧩 單字結構拆解與記憶法</div>
+          <div id="card-roots" class="flex items-center justify-center gap-1.5 font-black text-amber-950 text-lg mb-1">
+            <span class="bg-white border border-amber-300 px-2.5 py-0.5 rounded-lg">acci</span> +
+            <span class="bg-white border border-amber-300 px-2.5 py-0.5 rounded-lg">dent</span> +
+            <span class="bg-white border border-amber-300 px-2.5 py-0.5 rounded-lg">ally</span>
+          </div>
+          <p id="card-root-desc" class="text-[11px] text-amber-800 font-medium">accident 意外 (ac-到 + cid 落下) + -ally 副詞字尾</p>
+        </div>
+
+        <!-- 常見搭配詞 -->
+        <div class="w-full bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3 mb-3 text-left">
+          <div class="text-xs font-bold text-emerald-800 mb-1">🔗 常見搭配詞</div>
+          <div id="card-collocations" class="text-xs space-y-1 text-emerald-950 font-bold">
+            <div>accidentally drop <span class="font-normal text-emerald-700">不小心掉落</span></div>
+            <div>accidentally delete <span class="font-normal text-emerald-700">不小心刪除</span></div>
+            <div>accidentally hit <span class="font-normal text-emerald-700">不小心撞到</span></div>
+          </div>
+        </div>
+
+        <!-- 課文例句 -->
+        <div class="w-full text-left bg-slate-50 border border-slate-200 rounded-2xl p-3">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-400 mb-1">
+            <span>精選課文例句</span>
+            <button onclick="speakSentence()" class="text-slate-500 hover:text-indigo-600"><i class="fa-solid fa-volume-high"></i></button>
+          </div>
+          <p id="card-ex-en" class="text-xs text-slate-800 font-serif leading-relaxed">
+            Our teacher <span class="text-rose-600 font-bold underline">accidentally</span> turned on a funny filter on her camera during the online class.
+          </p>
+          <p id="card-ex-zh" class="text-[11px] text-slate-500 mt-1">我們的老師在線上課程時不小心在她的鏡頭上開啟了一個搞笑濾鏡。</p>
+        </div>
+      </div>
+
+      <div class="mt-4 space-y-2">
+        <button onclick="openStepModal()" class="w-full py-2.5 bg-amber-50 border-2 border-amber-300 rounded-xl text-amber-900 font-bold text-xs flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-list-ol"></i> 單字結構記憶兩步驟
+        </button>
+        <div class="flex gap-2">
+          <button onclick="changeCard(-1)" class="flex-1 py-2.5 border border-slate-300 rounded-xl font-bold text-xs text-slate-700">← 上一個</button>
+          <button onclick="changeCard(1)" class="flex-[1.5] py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs shadow">下一個 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 畫面 3：單字四選一測驗 (圖7) -->
+    <section id="view-quiz-mc" class="p-4 hidden space-y-4">
+      <div class="flex justify-between items-center text-xs">
+        <button onclick="switchTab('dashboard')" class="text-slate-500 font-bold">← 離開測驗</button>
+        <span class="bg-indigo-50 text-indigo-700 font-bold px-3 py-1 rounded-full border border-indigo-200">龍騰 B1 L1 (選擇題)</span>
+      </div>
+      <div class="border border-slate-200 rounded-3xl p-5 bg-white shadow-sm space-y-4">
+        <div class="flex justify-between text-xs text-slate-400 font-bold">
+          <span>第 1 / 34 題 (第 2 套)</span>
+          <span class="text-rose-500">■ 終止測驗</span>
+        </div>
+        <span class="inline-block bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-0.5 rounded">v.</span>
+        <p class="text-base font-serif font-bold leading-relaxed text-slate-800">
+          Can you <span class="inline-block bg-amber-100 border border-amber-300 px-4 py-0.5 rounded text-amber-900 font-mono">______</span> where we parked our scooter before entering the shopping mall?
+        </p>
+        <p class="text-xs text-slate-500 font-bold">請選擇最適當的單字或片語：</p>
+        <div class="space-y-2.5" id="mc-options">
+          <button onclick="selectMC(this, false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
+            <span><span class="inline-block w-6 h-6 rounded bg-slate-100 text-slate-600 text-xs leading-6 mr-2">A</span> realize</span>
+            <span class="text-[11px] text-slate-400">按 1</span>
+          </button>
+          <button onclick="selectMC(this, true)" class="w-full p-3 border-2 border-blue-500 bg-blue-50/30 rounded-2xl flex items-center justify-between text-sm font-bold">
+            <span><span class="inline-block w-6 h-6 rounded bg-blue-600 text-white text-xs leading-6 mr-2">B</span> recall</span>
+            <span class="text-[11px] text-slate-400">按 2</span>
+          </button>
+          <button onclick="selectMC(this, false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
+            <span><span class="inline-block w-6 h-6 rounded bg-slate-100 text-slate-600 text-xs leading-6 mr-2">C</span> yell</span>
+            <span class="text-[11px] text-slate-400">按 3</span>
+          </button>
+          <button onclick="selectMC(this, false)" class="w-full p-3 border border-slate-200 rounded-2xl flex items-center justify-between text-sm font-bold hover:bg-slate-50">
+            <span><span class="inline-block w-6 h-6 rounded bg-slate-100 text-slate-600 text-xs leading-6 mr-2">D</span> depress</span>
+            <span class="text-[11px] text-slate-400">按 4</span>
+          </button>
+        </div>
+        <div id="mc-feedback" class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-2 rounded-lg">✓ 答對了！ recall (v. 回想；記起)</div>
+      </div>
+    </section>
+
+    <!-- 畫面 4：拼寫題測驗 (圖9) -->
+    <section id="view-quiz-spell" class="p-4 hidden space-y-4">
+      <div class="flex justify-between items-center text-xs">
+        <button onclick="switchTab('dashboard')" class="text-slate-500 font-bold">← 離開測驗</button>
+        <span class="bg-indigo-50 text-indigo-700 font-bold px-3 py-1 rounded-full border border-indigo-200">龍騰 B1 L1 (拼寫題)</span>
+      </div>
+      <div class="border border-slate-200 rounded-3xl p-5 bg-white shadow-sm space-y-4">
+        <div class="flex gap-2 items-center">
+          <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded">n.</span>
+          <span class="bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold px-2 py-0.5 rounded">💡 憂鬱；沮喪</span>
+        </div>
+        <p class="text-base font-serif font-bold leading-relaxed">
+          The disappointing presentation plunged Claire into deep <span class="bg-amber-100 border border-amber-300 px-3 py-0.5 rounded font-mono text-amber-900">d________n</span> for weeks.
+        </p>
+        <input id="spell-input" type="text" value="depression" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm font-bold focus:outline-none focus:border-indigo-600" placeholder="請依提示拼寫單字...">
+        <button onclick="checkSpell()" class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-xs">檢查答案 / 繼續下一題 →</button>
+        <div id="spell-feedback" class="bg-rose-50/70 border border-rose-100 p-3 rounded-xl text-xs">
+          正確答案：<span class="text-rose-600 font-black underline">depression</span> <span class="text-slate-400 font-mono">/dɪˈprɛʃən/</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 畫面 5：課文克漏字訂正 (圖2) -->
+    <section id="view-cloze" class="p-4 hidden space-y-4">
+      <span class="inline-block bg-indigo-50 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full border border-indigo-200">訂正 - 第 3 / 7 題 (Part 1)</span>
+      <div class="bg-emerald-50/40 border border-emerald-200 rounded-3xl p-4 space-y-3">
+        <div class="text-xs font-bold text-emerald-800">【正確英文課文】</div>
+        <p class="text-sm font-serif leading-7 text-slate-800">
+          During our online classes last semester, I had a truly <span class="bg-amber-200/80 border border-amber-400 px-2 py-0.5 rounded font-bold text-amber-950">(B) memorable</span> experience. When the teacher asked me to <span class="bg-amber-200/80 border border-amber-400 px-2 py-0.5 rounded font-bold text-amber-950">(C) reply</span>, my little brother suddenly entered the room and began to <span class="bg-amber-200/80 border border-amber-400 px-2 py-0.5 rounded font-bold text-amber-950">(D) yell</span> at me. I <span class="bg-amber-200/80 border border-amber-400 px-2 py-0.5 rounded font-bold text-amber-950">(A) accidentally</span> turned on my microphone, and the rest of the class heard everything.
+        </p>
+        <hr class="border-emerald-200">
+        <div class="text-xs font-bold text-slate-500">【課文中文翻譯】</div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          在上學期的線上課程中，我經歷了一次難忘的事件。當老師請我回答問題時，我的弟弟突然走進房間對著我大吼。我不小心打開了麥克風，結果班上其餘的同學全都聽到了。
+        </p>
+      </div>
+    </section>
+
+    <!-- 畫面 6：錯題複習庫 (圖1) -->
+    <section id="view-mistakes" class="p-4 hidden space-y-3">
+      <div class="flex justify-between items-center">
+        <button onclick="switchTab('dashboard')" class="text-xs font-bold text-slate-500">← 返回主畫面</button>
+        <span class="border border-rose-200 bg-rose-50 text-rose-600 text-xs font-bold px-3 py-1 rounded-full">錯題複習庫</span>
+      </div>
+      <button onclick="switchTab('quiz-spell')" class="bg-rose-600 text-white text-xs font-bold px-4 py-2.5 rounded-full shadow">▶ 開始複習已勾選錯題</button>
+      <p class="text-[11px] text-slate-500 font-bold">待複習 (5 字) ・ 連續答對 2 次、其中至少 1 次是填字題就會移到已攻克</p>
+      <div id="mistake-list" class="space-y-2.5"></div>
+    </section>
+
+    <!-- 彈窗：單字結構記憶兩步驟 (圖5、圖6、圖8) -->
+    <div id="step-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-3xl w-full max-w-sm p-5 shadow-2xl space-y-3">
+        <div class="flex justify-between items-center border-b pb-2">
+          <span class="text-amber-800 font-bold text-xs">🔢 單字結構記憶兩步驟</span>
+          <button onclick="closeStepModal()" class="text-xs text-slate-400 font-bold">關閉 ✕</button>
+        </div>
+        <p class="font-bold text-sm">adv. 意外地；不小心地</p>
+        <div class="flex gap-2">
+          <button onclick="setModalStep(1)" id="btn-step1" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-amber-500 text-white">① 補齊字母</button>
+          <button onclick="setModalStep(2)" id="btn-step2" class="flex-1 py-1.5 text-xs font-bold rounded-lg border border-slate-200 text-slate-500">② 搭配詞</button>
+        </div>
+
+        <!-- 步驟 1：字根填空 (圖8) -->
+        <div id="modal-step1-content" class="space-y-3 pt-2 text-center">
+          <p class="text-[11px] text-slate-500">已給出一半的字母組合，請在空格內填入缺少的部分。</p>
+          <div class="flex items-center justify-center gap-1.5 font-black text-base">
+            <span class="bg-amber-50 border border-amber-300 px-3 py-1.5 rounded-xl text-amber-900">acci</span> +
+            <input id="root-input" type="text" placeholder="dent" class="w-20 border-2 border-amber-400 rounded-xl px-2 py-1.5 text-center text-slate-800 focus:outline-none"> +
+            <span class="bg-amber-50 border border-amber-300 px-3 py-1.5 rounded-xl text-amber-900">ally</span>
+          </div>
+          <button onclick="setModalStep(2)" class="w-full py-2.5 bg-amber-500 text-white rounded-xl font-bold text-xs">檢查並前往下一步 (Enter) →</button>
+        </div>
+
+        <!-- 步驟 2：搭配詞填空 (圖5、圖6) -->
+        <div id="modal-step2-content" class="hidden space-y-3 pt-2 text-center">
+          <p class="text-[11px] text-slate-500">看提示字母，輸入搭配詞中缺少的完整單字。</p>
+          <div class="text-xs font-mono text-amber-700 font-bold">a _ _ _ _ _ _ _ _ _ _ y</div>
+          <div class="flex items-center justify-center gap-2">
+            <input id="colloc-input" type="text" value="accidentally" class="border-2 border-emerald-500 rounded-xl px-3 py-1.5 text-center font-bold text-sm">
+            <span class="font-black text-base">hit</span>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-left text-xs text-emerald-900 font-bold">
+            ✅ 答對了！ <span class="underline">accidentally</span> hit (不小心撞到)
+          </div>
+          <button onclick="closeStepModal()" class="w-full py-2 bg-slate-800 text-white rounded-xl font-bold text-xs">完成練習</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部快速切換功能列 (方便預覽所有截圖介面) -->
+    <nav class="fixed bottom-0 w-full max-w-md bg-white border-t border-slate-200 grid grid-cols-5 py-2 text-[10px] font-bold text-slate-500 z-40">
+      <button onclick="switchTab('dashboard')" class="flex flex-col items-center gap-1 hover:text-indigo-600"><i class="fa-solid fa-sliders text-sm"></i>測驗設定</button>
+      <button onclick="switchTab('flashcard')" class="flex flex-col items-center gap-1 hover:text-indigo-600"><i class="fa-solid fa-clone text-sm"></i>單字卡</button>
+      <button onclick="switchTab('quiz-mc')" class="flex flex-col items-center gap-1 hover:text-indigo-600"><i class="fa-solid fa-list-ol text-sm"></i>選擇題</button>
+      <button onclick="switchTab('cloze')" class="flex flex-col items-center gap-1 hover:text-indigo-600"><i class="fa-solid fa-file-lines text-sm"></i>課文訂正</button>
+      <button onclick="switchTab('mistakes')" class="flex flex-col items-center gap-1 hover:text-rose-600"><i class="fa-solid fa-book-skull text-sm"></i>錯題庫</button>
+    </nav>
+  </div>
+
+  <script>
+    // 若已部署 GAS Web App，可將網址貼在下方引號中同步雲端試算表
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzU3IojW-hMC2tjHNLf9bpZc0d7tKsiby6F5zVDJ8-Vr8lEgpvz9q8KavOu20XXqz7rYg/exec";
+
+    const defaultVocab = [
+      { word: "accidentally", pos: "adv.", translation: "意外地；不小心地", phonetic: "/ˌæksɪˈdɛntli/", root_break: "acci + dent + ally", root_desc: "accident 意外 (ac-到 + cid 落下) + -ally 副詞字尾", example_en: "Our teacher accidentally turned on a funny filter on her camera during the online class.", example_zh: "我們的老師在線上課程時不小心在她的鏡頭上開啟了一個搞笑濾鏡。" },
+      { word: "depression", pos: "n.", translation: "憂鬱；沮喪", phonetic: "/dɪˈprɛʃən/", root_break: "de + press + ion", root_desc: "de- 向下 + press 壓 + -ion 名詞字尾", example_en: "The disappointing presentation plunged Claire into deep depression for weeks.", example_zh: "令人失望的報告讓克萊兒陷入數週的深深沮喪之中。" },
+      { word: "recall", pos: "v.", translation: "回想；記起", phonetic: "/rɪˈkɔl/", root_break: "re + call", root_desc: "re- 再、回 + call 喊 → 把記憶叫回來", example_en: "Can you recall where we parked our scooter?", example_zh: "你記得我們把機車停在哪裡嗎？" },
+      { word: "memorable", pos: "adj.", translation: "難忘的", phonetic: "/ˈmɛmərəbəl/", root_break: "memor + able", root_desc: "memor 記憶 + -able 可...的", example_en: "I had a truly memorable experience.", example_zh: "我經歷了一次難忘的事件。" }
+    ];
+
+    const defaultMistakes = [
+      { word: "take ... seriously", pos: "phr.", translation: "認真對待...", wrong_count: 1, pass_count: 1, last_answer: "放棄" },
+      { word: "perfect", pos: "adj.", translation: "完美的", wrong_count: 1, pass_count: 1, last_answer: "放棄" },
+      { word: "accidentally", pos: "adv.", translation: "意外地；不小心地", wrong_count: 1, pass_count: 1, last_answer: "放棄" },
+      { word: "skip", pos: "v.", translation: "故意不參加；跳過", wrong_count: 1, pass_count: 1, last_answer: "放棄" },
+      { word: "failure", pos: "n.", translation: "失敗", wrong_count: 1, pass_count: 1, last_answer: "放棄" }
+    ];
+
+    let currentIdx = 0;
+
+    function switchTab(tab) {
+      ["dashboard", "flashcard", "quiz-mc", "quiz-spell", "cloze", "mistakes"].forEach(id => {
+        const el = document.getElementById("view-" + id);
+        if (el) { el.classList.add("hidden"); el.classList.remove("flex"); }
+      });
+      const target = document.getElementById("view-" + tab);
+      target.classList.remove("hidden");
+      if (tab === "flashcard") target.classList.add("flex");
+    }
+
+    function renderCard() {
+      const item = defaultVocab[currentIdx];
+      document.getElementById("card-index").innerText = `${currentIdx + 1} / ${defaultVocab.length}`;
+      document.getElementById("card-pos").innerText = item.pos;
+      document.getElementById("card-word").innerText = item.word;
+      document.getElementById("card-zh").innerText = item.translation;
+      document.getElementById("card-phonetic").innerText = item.phonetic;
+      document.getElementById("card-root-desc").innerText = item.root_desc;
+      document.getElementById("card-ex-en").innerText = item.example_en;
+      document.getElementById("card-ex-zh").innerText = item.example_zh;
+      const parts = item.root_break.split("+").map(s => `<span class="bg-white border border-amber-300 px-2.5 py-0.5 rounded-lg">${s.trim()}</span>`).join(" + ");
+      document.getElementById("card-roots").innerHTML = parts;
+    }
+
+    function changeCard(dir) {
+      currentIdx = (currentIdx + dir + defaultVocab.length) % defaultVocab.length;
+      renderCard();
+    }
+
+    function speakWord() {
+      const u = new SpeechSynthesisUtterance(defaultVocab[currentIdx].word);
+      u.lang = "en-US";
+      window.speechSynthesis.speak(u);
+    }
+
+    function speakSentence() {
+      const u = new SpeechSynthesisUtterance(defaultVocab[currentIdx].example_en);
+      u.lang = "en-US";
+      window.speechSynthesis.speak(u);
+    }
+
+    function openStepModal() {
+      document.getElementById("step-modal").classList.remove("hidden");
+      document.getElementById("step-modal").classList.add("flex");
+      setModalStep(1);
+    }
+
+    function closeStepModal() {
+      document.getElementById("step-modal").classList.add("hidden");
+      document.getElementById("step-modal").classList.remove("flex");
+    }
+
+    function setModalStep(step) {
+      document.getElementById("modal-step1-content").classList.toggle("hidden", step !== 1);
+      document.getElementById("modal-step2-content").classList.toggle("hidden", step !== 2);
+    }
+
+    function selectMC(btn, isCorrect) {
+      const fb = document.getElementById("mc-feedback");
+      fb.innerText = isCorrect ? "✓ 答對了！ recall (v. 回想；記起)" : "✗ 答錯囉，請再試一次！";
+      fb.className = isCorrect ? "bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-2 rounded-lg" : "bg-rose-50 text-rose-600 text-xs font-bold px-3 py-2 rounded-lg";
+    }
+
+    function checkSpell() {
+      const val = document.getElementById("spell-input").value.trim().toLowerCase();
+      alert(val === "depression" ? "🎉 拼寫正確！" : "拼寫有誤，正確答案為：depression");
+    }
+
+    function renderMistakes() {
+      const container = document.getElementById("mistake-list");
+      container.innerHTML = defaultMistakes.map(m => `
+        <div class="border border-slate-200 rounded-2xl p-3.5 flex items-center justify-between bg-white shadow-sm">
+          <div class="flex items-center gap-2.5">
+            <input type="checkbox" checked class="w-4 h-4 accent-blue-600 rounded">
+            <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-1 rounded">待觀察</span>
+            <div>
+              <span class="font-black text-sm text-slate-800">${m.word}</span>
+              <span class="text-xs text-slate-400 ml-1">${m.pos} ${m.translation}</span>
+            </div>
+          </div>
+          <div class="text-right text-[11px]">
+            <div class="font-bold text-slate-600">錯 ${m.wrong_count} / 考過 ${m.pass_count} (100%)</div>
+            <div class="text-slate-400">曾填寫：${m.last_answer}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    renderCard();
+    renderMistakes();
+  </script>
+</body>
+</html>
